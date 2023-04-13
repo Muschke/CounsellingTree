@@ -34,8 +34,9 @@ public class DefaultUnitService implements UnitService {
 
     @Override
     public List<Unit> findAll(){
-        if(!unitRepository.findAll().isEmpty()){
-            return unitRepository.findAll();
+        List<Unit> response = unitRepository.findAll();
+        if(!response.isEmpty()){
+            return response;
         } else{
             throw new NoSuchElementException("No units present");
         }

@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface EnumerationLevelRepository extends JpaRepository<EnumerationLevel, Long> {
     Optional<EnumerationLevel> findByDescription(String description);
+    Optional<EnumerationLevel> findByCode(String code);
 }

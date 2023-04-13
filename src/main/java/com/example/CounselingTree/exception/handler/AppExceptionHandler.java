@@ -1,6 +1,7 @@
 package com.example.CounselingTree.exception.handler;
 
 import com.example.CounselingTree.exception.ExistsAlreadyInDatabaseException;
+import com.example.CounselingTree.exception.InvalidLevelCodeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,5 +27,10 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Object> handleNoSuchElementException(NoSuchElementException ex, WebRequest request){
         return new ResponseEntity<Object>(new ApiError(ex.getMessage(), HttpStatus.NO_CONTENT, LocalDateTime.now()), HttpStatus.ACCEPTED);
+    }
+
+    @ExceptionHandler(InvalidLevelCodeException.class)
+    public ResponseEntity<Object> handleInvalidLevelCodeException(InvalidLevelCodeException ex, WebRequest request){
+        return new ResponseEntity<Object>(new ApiError(ex.getMessage(), HttpStatus.CONFLICT, LocalDateTime.now()), HttpStatus.CONFLICT);
     }
 }

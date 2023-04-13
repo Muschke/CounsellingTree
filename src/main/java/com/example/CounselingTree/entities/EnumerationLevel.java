@@ -4,6 +4,8 @@ import com.example.CounselingTree.exception.InvalidLevelCodeException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "enumerationlevels")
 public class EnumerationLevel {
@@ -45,5 +47,27 @@ public class EnumerationLevel {
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EnumerationLevel that = (EnumerationLevel) o;
+        return Objects.equals(code, that.code) && Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, description);
+    }
+
+    @Override
+    public String toString() {
+        return "EnumerationLevel{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

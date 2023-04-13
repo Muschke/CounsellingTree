@@ -21,6 +21,13 @@ class EnumerationLevelRepositoryTest extends AbstractTransactionalJUnit4SpringCo
     @Test
     void findByDescriptionWorks() {
         assertThat(levelRepository.findByDescription("testleveldescription")).isPresent();
+        assertThat(levelRepository.findByDescription("isnotpresent")).isNotPresent();
+    }
+
+    @Test
+    void findByCodeWorks(){
+        assertThat(levelRepository.findByCode("A1")).isPresent();
+        assertThat(levelRepository.findByDescription("Z99")).isNotPresent();
     }
 
     @Test

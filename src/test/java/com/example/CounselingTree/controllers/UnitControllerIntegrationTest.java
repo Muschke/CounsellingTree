@@ -66,6 +66,16 @@ public class UnitControllerIntegrationTest {
     }
 
     @Test
+    void addingValidUnitWorks() throws Exception{
+        mockMvc.perform(post(URI+"addUnit")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("newUnit"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/plain;charset=UTF-8"))
+                .andExpect(content().string("New unit added succesfully"));
+    }
+
+    @Test
     void addNewUnitWithInvalidUnitNameThrowsError() throws Exception{
         String error = mockMvc.perform(post(URI+"addUnit")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -93,13 +103,5 @@ public class UnitControllerIntegrationTest {
         assertThat(error).isEqualTo("Unit already exists");
     }
 
-    @Test
-    void addingValidUnitWorks() throws Exception{
-        mockMvc.perform(post(URI+"addUnit")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("new unit"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("text/plain;charset=UTF-8"))
-                .andExpect(content().string("New unit added succesfully"));
-    }
+
 }
