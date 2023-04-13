@@ -7,8 +7,7 @@ import java.util.Optional;
 
 public interface UnitService {
     Optional<Unit> findByName(String name);
-    void createUnit(Unit unit);
-
+    void createUnit(String unitname);
     List<Unit> findAll();
 
 }

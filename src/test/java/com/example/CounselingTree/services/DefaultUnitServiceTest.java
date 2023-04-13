@@ -32,8 +32,9 @@ class DefaultUnitServiceTest {
 
     @Test
     void createUnit() {
-        unitService.createUnit(unit);
-        verify(unitRepository).save(unit);
+        unitService.createUnit("newUnit");
+        verify(unitRepository).findByName("newUnit");
+        verify(unitRepository).save(new Unit("newUnit"));
     }
 
     @Test
