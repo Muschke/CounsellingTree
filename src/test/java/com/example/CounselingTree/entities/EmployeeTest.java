@@ -16,21 +16,26 @@ import static org.junit.jupiter.api.Assertions.*;
 class EmployeeTest {
     private Unit unit;
     private EnumerationLevel levelSenior;
+    private  EnumerationLevel SeniorConsultant;
     private EnumerationLevel levelJuniorA;
     private EnumerationLevel levelJuniorB;
 
     private Employee counsellor;
     private Employee counsellorTwo;
+    private Employee counsellorLevelSeniorConsultant;
     private Employee counselleeOne;
     private Employee counselleeTwo;
-
+    private Employee counselleeThree;
     private LocalDate dateLessOneYearAgo;
+    private LocalDate dateMoreThanOneYearAgo;
 
     @BeforeEach
     void beforeEach() {
         dateLessOneYearAgo = LocalDate.now().minusMonths(8);
+        dateMoreThanOneYearAgo = LocalDate.now().minusYears(1).minusMonths(2);
         unit = new Unit("General Unit Test");
         levelSenior = new EnumerationLevel("D2", "Senior Manager Test");
+        SeniorConsultant= new EnumerationLevel("C1", "Senior Consultant");
         levelJuniorA = new EnumerationLevel("A3", "Young Professional Test");
         levelJuniorB = new EnumerationLevel("A4", "Consultant Test");
 
@@ -38,9 +43,16 @@ class EmployeeTest {
                 unit, levelSenior);
         counsellorTwo = new Employee("counsellorNameTwo", "counsellorSurnameTwo", LocalDate.of(1992,1,15), LocalDate.of(2013, 03, 15),
                 unit, levelSenior);
+
+        counsellorLevelSeniorConsultant= new Employee("counsellorNameThree", "counsellorSurnameThree", LocalDate.of(1994,4,23), LocalDate.of(2019, 8, 24),
+                unit, SeniorConsultant);
+
         counselleeOne = new Employee("counselleeOneName", "counselleeOneSurname", LocalDate.of(1995,8,15), dateLessOneYearAgo,
                 unit, levelJuniorA);
-        counselleeTwo = new Employee("counselleeTwoName", "counselleeTwoSurname", LocalDate.of(2000,04,23), unit, levelJuniorB);
+        counselleeTwo = new Employee("counselleeTwoName", "counselleeTwoSurname", LocalDate.of(2000,04,23), dateMoreThanOneYearAgo,
+                unit, levelJuniorB);
+        counselleeThree = new Employee("counselleeThreeName", "counselleeThreeSurname", LocalDate.of(2000,04,23), dateLessOneYearAgo,
+                unit, levelJuniorA);
 
     }
 
@@ -61,8 +73,43 @@ class EmployeeTest {
 
 
     @Test
+    void addingCounsellorWithInvalidSeniorityThrowsException(){
+        assertThatExceptionOfType(InvalidCounselorException.class).isThrownBy(()->counselleeTwo.changeOrSetCounsellor(counselleeOne));
+    }
+
+    @Test
+    void addingCounsellorWithLevelLowerThanCToCounselleeThrowsException(){
+        assertThatExceptionOfType(InvalidCounselorException.class).isThrownBy(()->counselleeOne.changeOrSetCounsellor(counselleeTwo));
+    }
+
+    @Test
+    void addingCounsellorWithLevelLowerOrEqualToCounselleeToCounselleeThrowsException(){
+        assertThatExceptionOfType(InvalidCounselorException.class).isThrownBy(()->counsellorTwo.changeOrSetCounsellor(counsellor));
+    }
+
+
+    @Test
     void addCounselleeToCounselorWithInvalidSeniorityThrowsException(){
         assertThatExceptionOfType(InvalidCounselorException.class).isThrownBy(()->counselleeOne.addCounsellee(counselleeTwo));
+    }
+
+    @Test
+    void addCounselleeToCounselorWithLevelLowerThanCThrowsException(){
+        assertThatExceptionOfType(InvalidCounselorException.class).isThrownBy(()->counselleeTwo.addCounsellee(counselleeOne));
+    }
+
+    @Test
+    void addCounselleeToCounselorWithLevelLowerOrEqualToCounselleeThrowsException(){
+        assertThatExceptionOfType(InvalidCounselorException.class).isThrownBy(()->counsellor.addCounsellee(counsellorTwo));
+    }
+
+    @Test
+    void addingMoreThanTwoCounselleesToCounselorWithLevelCThrowsException(){
+        counsellorLevelSeniorConsultant.addCounsellee(counselleeOne);
+        counsellorLevelSeniorConsultant.addCounsellee(counselleeTwo);
+        assertThatExceptionOfType(InvalidCounselorException.class).isThrownBy(()-> counsellorLevelSeniorConsultant.addCounsellee(counselleeThree));
+
+
     }
 
     @Test

@@ -84,6 +84,24 @@ public class Employee {
         if(counsellor == null){
             throw new NullPointerException();
         }
+
+        //here we also need to do the correct checks and make tests for that
+        //A-1. Counsellor has one year seniority, checkup doesn't happen yet
+        if(!this.employeeHasOneYearSeniority(counsellor)){
+            throw new InvalidCounselorException("Counsellor doesn't have the required seniority");
+        }
+        //1.the counsellor we try to set has a higher level and at least level C
+        //-->the below might not work
+        if(!this.hasValidEnumerationLevel(counsellor)){
+            throw new InvalidCounselorException("Employee doesn't have the required enumerationlevel");
+        }
+
+
+        //2.If he has level C he can only have max of 2 counsellee
+        if(this.hasEnumerationLevelC1(counsellor)&&(counsellor.getCounsellees().size() >= 2)){
+            throw new InvalidCounselorException("Counsellor already reached its maximal counsellees");
+        }
+
         if(this.getCounsellor() != null){
             this.getCounsellor().removeCounsellee(this);
         }
@@ -94,12 +112,23 @@ public class Employee {
         if(counsellee == null){
             throw new NullPointerException();
         }
+
+        if(!this.hasValidEnumerationLevel(counsellee)){
+            throw new InvalidCounselorException("Employee doesn't have the required enumerationlevel");
+        }
+
+        if(this.hasEnumerationLevelC1()&&(this.getCounsellees().size() >= 2)){
+            throw new InvalidCounselorException("Counsellor already reached its maximal counsellees");
+        }
+
         if(!this.employeeHasOneYearSeniority()){
             throw new InvalidCounselorException("Employee doesn't have the required seniority");
         }
         counsellee.setCounsellor(this);
         return counsellees.add(counsellee);
     }
+
+
     public boolean removeCounsellee(Employee counsellee){
         if(counsellee == null){
             throw new NullPointerException();
@@ -110,6 +139,18 @@ public class Employee {
         counsellee.setCounsellor(null);
         return this.counsellees.remove(counsellee);
     }
+
+    private boolean hasEnumerationLevelC1() {
+     return this.getLevel().getCode().compareTo("C1")==0?true:false;
+    }
+    private boolean hasEnumerationLevelC1(Employee counsellor) {
+        return counsellor.getLevel().getCode().compareTo("C1")==0?true:false;
+    }
+    private boolean hasValidEnumerationLevel(Employee counsellee) {
+       return (this.getLevel().getCode().compareTo("C1")>=0 && this.getLevel().getCode().compareTo(counsellee.getLevel().getCode())>0)?true:false;
+    }
+
+
     private void removeAllCounsellees(){
         this.counsellees.clear();
     }
@@ -124,6 +165,9 @@ public class Employee {
     }
     private Boolean employeeHasOneYearSeniority(){
         return ChronoUnit.YEARS.between(this.startDateContract, LocalDate.now())>=1?true:false;
+    }
+    private Boolean employeeHasOneYearSeniority(Employee counsellor){
+        return ChronoUnit.YEARS.between(counsellor.startDateContract, LocalDate.now())>=1?true:false;
     }
     private void setName(String name){
         if(BlankOrEmpty(name)){

@@ -29,4 +29,8 @@ public class EmployeeController {
         employeeService.createEmployee(employeeDto);
         return ResponseEntity.ok("New employee added succesfully");
     }
+
+    //setCounsellor
+
+    //addCounselleeXToCounsellorY
 }
