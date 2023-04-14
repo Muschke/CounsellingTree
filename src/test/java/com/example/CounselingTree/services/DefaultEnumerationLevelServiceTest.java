@@ -44,7 +44,6 @@ class DefaultEnumerationLevelServiceTest {
     @Test
     void findAllWithoutRecordsTrowException(){
         assertThatExceptionOfType(NoSuchElementException.class).isThrownBy(()->levelService.findAll());
-
     }
 
     @Test

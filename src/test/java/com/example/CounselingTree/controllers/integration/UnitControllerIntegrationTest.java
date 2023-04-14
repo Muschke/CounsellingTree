@@ -1,4 +1,4 @@
-package com.example.CounselingTree.controllers;
+package com.example.CounselingTree.controllers.integration;
 
 import com.example.CounselingTree.entities.Unit;
 import com.fasterxml.jackson.databind.JsonNode;

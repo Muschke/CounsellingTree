@@ -1,5 +1,6 @@
 package com.example.CounselingTree.repositories;
 
+import com.example.CounselingTree.enums.Status;
 import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,16 @@ class EmployeeRepositoryTest extends AbstractTransactionalJUnit4SpringContextTes
 
     @BeforeEach
     void setUp() {
+    }
+
+    @Test
+    void  findByNameAndSurnameAndDateOfBirthWorks(){
+        assertThat(employeeRepository.findByNameAndSurnameAndDateOfBirth("testname", "testsurname",
+                LocalDate.of(1990,01,01)))
+                .hasValueSatisfying(employee -> {
+                    assertThat(employee.getStatus()).isEqualTo(Status.ACTIVE);
+                    assertThat(employee.getStartDateContract()).isEqualTo(LocalDate.of(2015,2,1));
+                });
     }
 
     @Test

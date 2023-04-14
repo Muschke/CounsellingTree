@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "enumerationlevels")
-public class EnumerationLevel {
+public class EnumerationLevel implements Comparable<EnumerationLevel> {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @NotBlank
@@ -47,6 +47,13 @@ public class EnumerationLevel {
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public int compareTo(EnumerationLevel level) {
+        if(this.code == level.getCode()) return 0;
+        else if (this.code.compareTo(level.getCode()) == 1) return 1;
+        else return -1;
     }
 
     @Override

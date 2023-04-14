@@ -26,7 +26,6 @@ public class EnumerationLevelController {
 
     @PostMapping("/addLevel")
     public ResponseEntity<String> addNewLevel(@RequestBody /*EnumerationLevel*/Level level){
-        System.out.println("got here");
         levelService.createEnumerationLevel(level);
         return ResponseEntity.ok("New level added succesfully");
     }

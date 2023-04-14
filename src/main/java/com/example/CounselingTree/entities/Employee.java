@@ -5,6 +5,7 @@ import com.example.CounselingTree.exception.InvalidCounselorException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -15,22 +16,22 @@ import java.util.*;
 public class Employee {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotEmpty
+    @NotNull
     private Status status;
     @NotBlank
     private String name;
     @NotBlank
     private String surname;
-    @NotEmpty
+    @NotNull
     private LocalDate dateOfBirth;
-    @NotEmpty
+    @NotNull
     private LocalDate startDateContract;
     private LocalDate endDateContract;
-    @NotEmpty
+    @NotNull
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "unit_id", referencedColumnName = "id")
     private Unit unit;
-    @NotEmpty
+    @NotNull
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "enumerationlevels_id", referencedColumnName = "id")
     private EnumerationLevel level;

@@ -1,4 +1,4 @@
-package com.example.CounselingTree.controllers;
+package com.example.CounselingTree.controllers.integration;
 
 import com.example.CounselingTree.entities.EnumerationLevel;
 import com.example.CounselingTree.entities.Unit;
@@ -37,7 +37,7 @@ public class EnumerationLevelControllerIntegrationTest {
                 .andExpect(status().isAccepted())
                 .andExpect(content().contentType("application/json"))
                 .andReturn().getResolvedException().getMessage();
-        
+
 
         assertThat(error).isEqualTo("No enumerationlevels present");
     }
