@@ -28,11 +28,11 @@ public class Employee {
     private LocalDate startDateContract;
     private LocalDate endDateContract;
     @NotNull
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "unit_id", referencedColumnName = "id")
     private Unit unit;
     @NotNull
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "enumerationlevels_id", referencedColumnName = "id")
     private EnumerationLevel level;
     @OneToOne(cascade = CascadeType.REMOVE)

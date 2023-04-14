@@ -1,1 +1,1 @@
-INSERT INTO ENUMERATIONLEVELS (code, description) VALUES ('A1', 'testleveldescription');
+INSERT INTO ENUMERATIONLEVELS (code, description) VALUES ('A9', 'testleveldescription');

@@ -5,12 +5,16 @@ import com.example.CounselingTree.entities.EnumerationLevel;
 import com.example.CounselingTree.payload.EmployeeDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -27,12 +31,14 @@ public class EmployeeControllorIntegrationTest {
 
     private final static String URI = "/employees/";
     private ObjectMapper objectMapper;
-    private final MockMvc mockMvc;
+
+    private MockMvc mockMvc;
 
     public EmployeeControllorIntegrationTest(MockMvc mockMvc, ObjectMapper objectMapper) {
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
     }
+
 
     @Test
     void getAllEmployeesThrowsExceptionWhenEmpty() throws Exception{
@@ -123,7 +129,7 @@ public class EmployeeControllorIntegrationTest {
 
 
     @Test
-    void addingValidLevelWorks() throws Exception{
+    void addingValidEmployeeWorks() throws Exception{
         this.insertUnitAndLevel();
         EmployeeDto employeeDto = new EmployeeDto("employeeName", "employeeSurname", LocalDate.of(2000,04,23),1L,1L);
 
@@ -148,4 +154,6 @@ public class EmployeeControllorIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mocklevel)));
     }
+
+
 }

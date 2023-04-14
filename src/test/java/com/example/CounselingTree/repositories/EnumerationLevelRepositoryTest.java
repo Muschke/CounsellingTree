@@ -26,7 +26,7 @@ class EnumerationLevelRepositoryTest extends AbstractTransactionalJUnit4SpringCo
 
     @Test
     void findByCodeWorks(){
-        assertThat(levelRepository.findByCode("A1")).isPresent();
+        assertThat(levelRepository.findByCode("A9")).isPresent();
         assertThat(levelRepository.findByDescription("Z99")).isNotPresent();
     }
 
@@ -40,7 +40,7 @@ class EnumerationLevelRepositoryTest extends AbstractTransactionalJUnit4SpringCo
         assertThat(levelRepository.findById(idTestLevel()))
                 .hasValueSatisfying(level -> {
                     assertThat(level.getDescription()).isEqualTo("testleveldescription");
-                    assertThat(level.getCode()).isEqualTo("A1");
+                    assertThat(level.getCode()).isEqualTo("A9");
                 });
     }
 
