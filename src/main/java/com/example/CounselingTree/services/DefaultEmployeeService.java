@@ -3,6 +3,7 @@ package com.example.CounselingTree.services;
 import com.example.CounselingTree.entities.Employee;
 import com.example.CounselingTree.entities.EnumerationLevel;
 import com.example.CounselingTree.exception.ExistsAlreadyInDatabaseException;
+import com.example.CounselingTree.payload.CounsellorAndCounsellee;
 import com.example.CounselingTree.payload.EmployeeDto;
 import com.example.CounselingTree.repositories.EmployeeRepository;
 import com.example.CounselingTree.repositories.EnumerationLevelRepository;
@@ -50,6 +51,51 @@ public class DefaultEmployeeService implements EmployeeService {
             employeeRepository.save(new Employee(employeeDto.getName(), employeeDto.getSurname(), employeeDto.getDateOfBirth(),
                     unitRepository.findById(employeeDto.getUnitId()).get(), levelRepository.findById(employeeDto.getLevelId()).get()));
         }
+    }
 
+    @Override
+    public Optional<Employee> findById(long id){
+        return employeeRepository.findById(id);
+    }
+
+    /*untested methods below*/
+    @Override
+    public void setCounsellorForEmployee(CounsellorAndCounsellee counsellorAndCounsellee){
+        Employee counsellor = this.findById(counsellorAndCounsellee.getCounsellorId()).get();
+        Employee counsellee = this.findById(counsellorAndCounsellee.getCounselleeId()).get();
+
+        counsellee.changeOrSetCounsellor(counsellor);
+
+        employeeRepository.save(counsellor);
+        employeeRepository.save(counsellee);
+    }
+
+    @Override
+    public void addCounseleeToCounselor(CounsellorAndCounsellee counsellorAndCounsellee){
+        Employee counsellor = this.findById(counsellorAndCounsellee.getCounsellorId()).get();
+        Employee counsellee = this.findById(counsellorAndCounsellee.getCounselleeId()).get();
+
+        counsellor.addCounsellee(counsellee);
+
+        employeeRepository.save(counsellor);
+        employeeRepository.save(counsellee);
+    }
+
+    @Override
+    public void removeCounseleeFromCounselor(CounsellorAndCounsellee counsellorAndCounsellee){
+        Employee counsellor = this.findById(counsellorAndCounsellee.getCounsellorId()).get();
+        Employee counsellee = this.findById(counsellorAndCounsellee.getCounselleeId()).get();
+
+        counsellor.removeCounsellee(counsellee);
+
+        employeeRepository.save(counsellor);
+        employeeRepository.save(counsellee);
+    }
+
+    @Override
+    public void terminateContract(long id){
+        Employee employee = employeeRepository.findById(id).get();
+        employee.endContract();
+        employeeRepository.save(employee);
     }
 }
