@@ -84,20 +84,12 @@ public class Employee {
         if(counsellor == null){
             throw new NullPointerException();
         }
-
-        //here we also need to do the correct checks and make tests for that
-        //A-1. Counsellor has one year seniority, checkup doesn't happen yet
         if(!this.employeeHasOneYearSeniority(counsellor)){
             throw new InvalidCounselorException("Counsellor doesn't have the required seniority");
         }
-        //1.the counsellor we try to set has a higher level and at least level C
-        //-->the below might not work
-        if(!this.hasValidEnumerationLevel(counsellor)){
+        if(this.hasValidEnumerationLevel(counsellor)){
             throw new InvalidCounselorException("Employee doesn't have the required enumerationlevel");
         }
-
-
-        //2.If he has level C he can only have max of 2 counsellee
         if(this.hasEnumerationLevelC1(counsellor)&&(counsellor.getCounsellees().size() >= 2)){
             throw new InvalidCounselorException("Counsellor already reached its maximal counsellees");
         }

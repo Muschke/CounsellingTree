@@ -65,12 +65,10 @@ class EmployeeTest {
         assertThat(counsellor.getCounsellees()).doesNotContain(counselleeTwo);
         assertThat(counselleeOne.getCounsellor()).isEqualTo(counsellor);
 
-
         counsellor.addCounsellee(counselleeTwo);
         assertThat(counsellor.getCounsellees()).containsAll(Arrays.asList(counselleeOne, counselleeTwo));
         assertThat(counselleeTwo.getCounsellor()).isEqualTo(counsellor);
     }
-
 
     @Test
     void addingCounsellorWithInvalidSeniorityThrowsException(){
@@ -85,6 +83,15 @@ class EmployeeTest {
     @Test
     void addingCounsellorWithLevelLowerOrEqualToCounselleeToCounselleeThrowsException(){
         assertThatExceptionOfType(InvalidCounselorException.class).isThrownBy(()->counsellorTwo.changeOrSetCounsellor(counsellor));
+    }
+
+    @Test
+    void addingCounsellorWithLevelCWithTwoCounselleesThrowsException(){
+        counselleeOne.changeOrSetCounsellor(counsellorLevelSeniorConsultant);
+        counselleeTwo.changeOrSetCounsellor(counsellorLevelSeniorConsultant);
+
+        assertThatExceptionOfType(InvalidCounselorException.class).isThrownBy(()->  counselleeThree.changeOrSetCounsellor(counsellorLevelSeniorConsultant));
+
     }
 
 
