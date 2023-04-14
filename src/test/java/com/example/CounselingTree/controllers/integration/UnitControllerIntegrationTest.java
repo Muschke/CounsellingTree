@@ -3,17 +3,26 @@ package com.example.CounselingTree.controllers.integration;
 import com.example.CounselingTree.entities.Unit;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.context.WebApplicationContext;
 
 import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,8 +42,14 @@ public class UnitControllerIntegrationTest {
     private final MockMvc mockMvc;
 
     public UnitControllerIntegrationTest(MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
+        this.mockMvc = mockMvc;
+    }
+
+    @BeforeEach
+    void clearDatabase(@Autowired JdbcTemplate jdbcTemplate) {
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "employees");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "units");
     }
 
     @Test

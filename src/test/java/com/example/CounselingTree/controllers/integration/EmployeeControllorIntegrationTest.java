@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -32,13 +35,22 @@ public class EmployeeControllorIntegrationTest {
     private final static String URI = "/employees/";
     private ObjectMapper objectMapper;
 
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
-    public EmployeeControllorIntegrationTest(MockMvc mockMvc, ObjectMapper objectMapper) {
+    private JdbcTemplate jdbcTemplate;
+
+    public EmployeeControllorIntegrationTest(MockMvc mockMvc, ObjectMapper objectMapper, JdbcTemplate jdbcTemplate) {
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
+    @BeforeEach
+    void clearDatabase() {
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "employees");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "enumerationlevels");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "units");
+    }
 
     @Test
     void getAllEmployeesThrowsExceptionWhenEmpty() throws Exception{
@@ -52,7 +64,10 @@ public class EmployeeControllorIntegrationTest {
     @Test
     void getAllEmployeesWorksWhenEmployeesPresent() throws Exception{
         this.insertUnitAndLevel();
-        EmployeeDto employeeDto = new EmployeeDto("employeeName", "employeeNameSurname", LocalDate.of(2000,04,23),1L,1L);
+        Long idUnit = jdbcTemplate.queryForObject("SELECT id FROM units WHERE name = 'new unit'", Long.class);
+        Long idLevel = jdbcTemplate.queryForObject("SELECT id FROM enumerationlevels WHERE code = 'A1'", Long.class);
+        EmployeeDto employeeDto = new EmployeeDto("employeeName", "employeeNameSurname", LocalDate.of(2000,04,23)
+                ,idLevel,idUnit);
 
 
         mockMvc.perform(post(URI+"addEmployee")
@@ -77,7 +92,11 @@ public class EmployeeControllorIntegrationTest {
     @Test
     void addNewEmployeeWithInvalidNameThrowsError() throws Exception{
         this.insertUnitAndLevel();
-        EmployeeDto employeeDto = new EmployeeDto(" ", "employeeNameSurname", LocalDate.of(2000,04,23),1L,1L);
+        Long idUnit = jdbcTemplate.queryForObject("SELECT id FROM units WHERE name = 'new unit'", Long.class);
+        Long idLevel = jdbcTemplate.queryForObject("SELECT id FROM enumerationlevels WHERE code = 'A1'", Long.class);
+        EmployeeDto employeeDto = new EmployeeDto(" ", "employeeNameSurname", LocalDate.of(2000,04,23)
+                ,idLevel,idUnit);
+
         String error = mockMvc.perform(post(URI+"addEmployee")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(employeeDto)))
@@ -90,7 +109,10 @@ public class EmployeeControllorIntegrationTest {
     @Test
     void addNewEmployeeWithInvalidSurnameThrowsError() throws Exception{
         this.insertUnitAndLevel();
-        EmployeeDto employeeDto = new EmployeeDto("employeeName", " ", LocalDate.of(2000,04,23),1L,1L);
+        Long idUnit = jdbcTemplate.queryForObject("SELECT id FROM units WHERE name = 'new unit'", Long.class);
+        Long idLevel = jdbcTemplate.queryForObject("SELECT id FROM enumerationlevels WHERE code = 'A1'", Long.class);
+        EmployeeDto employeeDto = new EmployeeDto("employeeName", " ", LocalDate.of(2000,04,23)
+                ,idLevel,idUnit);
         String error = mockMvc.perform(post(URI+"addEmployee")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(employeeDto)))
@@ -107,9 +129,12 @@ public class EmployeeControllorIntegrationTest {
     @Test
     void addingNewEmployeeWithAlreadyExistingNameSurnameAndBirthdateThrowsError() throws Exception{
         this.insertUnitAndLevel();
-        EmployeeDto employeeDto = new EmployeeDto("employeeName", "employeeSurname", LocalDate.of(2000,04,23),1L,1L);
-        EmployeeDto employeeDtoCopy = new EmployeeDto("employeeName", "employeeSurname", LocalDate.of(2000,04,23),1L,1L);
-
+        Long idUnit = jdbcTemplate.queryForObject("SELECT id FROM units WHERE name = 'new unit'", Long.class);
+        Long idLevel = jdbcTemplate.queryForObject("SELECT id FROM enumerationlevels WHERE code = 'A1'", Long.class);
+        EmployeeDto employeeDto = new EmployeeDto("employeeName", "employeeNameSurname", LocalDate.of(2000,04,23)
+                ,idLevel,idUnit);
+        EmployeeDto employeeDtoCopy = new EmployeeDto("employeeName", "employeeNameSurname", LocalDate.of(2000,04,23)
+                ,idLevel,idUnit);
 
         mockMvc.perform(post(URI+"addEmployee")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -131,7 +156,10 @@ public class EmployeeControllorIntegrationTest {
     @Test
     void addingValidEmployeeWorks() throws Exception{
         this.insertUnitAndLevel();
-        EmployeeDto employeeDto = new EmployeeDto("employeeName", "employeeSurname", LocalDate.of(2000,04,23),1L,1L);
+        Long idUnit = jdbcTemplate.queryForObject("SELECT id FROM units WHERE name = 'new unit'", Long.class);
+        Long idLevel = jdbcTemplate.queryForObject("SELECT id FROM enumerationlevels WHERE code = 'A1'", Long.class);
+        EmployeeDto employeeDto = new EmployeeDto("employeeName", "employeeNameSurname", LocalDate.of(2000,04,23)
+                ,idLevel,idUnit);
 
         mockMvc.perform(post(URI+"addEmployee")
                         .contentType(MediaType.APPLICATION_JSON)
